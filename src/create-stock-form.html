@@ -1,0 +1,121 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<dom-module id="create-stock-form">
+<!----- This component will be passed into the create-stock.html page ----->
+    <template>
+        <style>
+            paper-card {
+                width: 400px;
+                margin-top: 40px;
+                margin-left: 40px;
+                padding-left: 10px;
+                padding-right: 10px;
+                padding-bottom: 10px;
+                z-index: 30px;
+            }
+            
+            paper-card {
+                --paper-card-header: {
+                    background-color: #D4E157;
+                    margin-top: 5px;
+                }
+                --paper-card-header-text: {
+                    color: white;
+                }
+            }
+            
+            :root {
+/*                --paper-input-container-color: white;*/
+                --paper-input-container-focus-color: #29B6F6;
+/*                --paper-input-container-input-color: white;*/
+            }
+            
+            paper-input {
+                width: 250px;
+            }
+            
+            #price {
+                width: 150px;
+            }
+            
+            vaadin-date-picker {
+                width: 150px;
+            }
+            
+            paper-button {
+                background-color: #29B6F6;
+                color: white;
+                font-size: 12px;
+                font-weight: bold;
+                height: 40px;
+            }
+            
+            #stock-details {
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            
+            #availableDate {
+                width: 180px;
+            }
+        </style>
+        
+        <!----- Create Stock item form ----->
+        <paper-card class="stock-item-details" heading="Create a new stock item!">
+            <div id="stock-details">
+                <paper-input id="name" label="Item name"></paper-input>
+                <paper-input id="description" label="Description"></paper-input>
+                <vaadin-date-picker id="availableDate" label="Select available date"> </vaadin-date-picker>
+                <paper-input id="price" label="Price" type="number">
+                    <div prefix>£</div>
+                </paper-input>
+                <paper-checkbox id="taxable" checked=""> Am I taxable?</paper-checkbox>
+            </div>
+            <div id="details-controls">
+                <paper-button raised id="create" on-tap="create">Create</paper-button>
+                <paper-button raised id="reset" on-tap="reset">Reset</paper-button>
+            </div>
+        </paper-card>
+    </template>
+    <script>
+        Polymer({
+            is: 'create-stock-form'
+            , properties: {
+                stockItem: {
+                    type: Object
+                    , value: function () {
+                        return {
+                            name: ""
+                            , description: ""
+                            , price: ""
+                            , availableDate: ""
+                            , taxable: false
+                        }
+                    }
+                }
+            }
+            // Setting form values to null when form is reset
+            
+            , reset: function () {
+                    this.$.name.value = null;
+                    this.$.description.value = null;
+                    this.$.price.value = null;
+                    this.$.availableDate.value = null;
+                    this.$.taxable.value = null;
+                }
+                /* Fires create stock item event. 
+                   This is handled on the create stock page */
+                
+            , create: function () {
+                this.fire('add-stock-item', {
+                    // Passing in stock item object
+                    stockItem: this.stockItem
+                });
+            }
+        });
+    </script>
+</dom-module>

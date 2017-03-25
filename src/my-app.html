@@ -26,12 +26,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style>
       :host {
-        --app-primary-color: #4285f4;
+        --app-primary-color: #29B6F6
         --app-secondary-color: black;
-
         display: block;
       }
-
       app-header {
         color: #fff;
         background-color: var(--app-primary-color);
@@ -39,19 +37,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
-
       .drawer-list {
         margin: 0 20px;
       }
-
       .drawer-list a {
         display: block;
         padding: 0 16px;
         text-decoration: none;
-        color: var(--app-secondary-color);
+        color: #29B6F6;
         line-height: 40px;
       }
-
       .drawer-list a.iron-selected {
         color: black;
         font-weight: bold;
@@ -70,8 +65,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="/view1">View One</a>
-          <a name="view2" href="/view2">View Two</a>
+          <a name="view1" href="/view1">View Stock</a>
+          <a name="view2" href="/view2">Create Stock</a>
           <a name="view3" href="/view3">View Three</a>
         </iron-selector>
       </app-drawer>
@@ -82,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>My App</div>
+            <div main-title>Inventory</div>
           </app-toolbar>
         </app-header>
 
@@ -103,7 +98,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'my-app',
-
       properties: {
         page: {
           type: String,
@@ -111,25 +105,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_pageChanged',
         },
       },
-
       observers: [
         '_routePageChanged(routeData.page)',
       ],
-
       _routePageChanged: function(page) {
         this.page = page || 'view1';
-
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
       },
-
       _pageChanged: function(page) {
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
       },
-
       _showPage404: function() {
         this.page = 'view404';
       },
