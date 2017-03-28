@@ -1,0 +1,41 @@
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="create-stock-form.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+
+<dom-module id="create-stock">      
+    
+    <template>         
+        <!--      Adding reusable component-->   
+        <iron-localstorage name="stockItems" value="{{stockItems}}" on-iron-localstorage-load-empty="initItems"></iron-localstorage> 
+        <create-stock-form></create-stock-form>           
+    </template>
+    <script>
+        Polymer({
+            is: 'create-stock',           
+            listeners: {
+                'add-stock-item': 'updateStockList',
+            },          
+            properties: {
+                stockItems: {
+                    type: Array
+                }               
+            },
+            initItems: function() {
+              this.stockItems = []; 
+            },              
+            updateStockList: function(e) {
+                var item = e.detail.stockItem; 
+                
+                this.stockItems.push(item); 
+                
+                var newPos = this.stockItems.length - 1; 
+                
+                this.notifySplices('stockItems', [
+                  { index: newPos, removed: [], addedCount: 1, object: this.stockItems, type: 'splice'}
+                ]);
+            }            
+        });
+    </script>
+</dom-module>

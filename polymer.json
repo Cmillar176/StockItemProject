@@ -2,10 +2,9 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/view-products.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
+    "src/view-stock.html",
+    "src/create-stock.html",
+    "src/temp-page.html"
   ],
   "sourceGlobs": [
     "src/**/*",

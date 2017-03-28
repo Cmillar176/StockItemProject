@@ -1,0 +1,48 @@
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<dom-module id="view-stock">
+   <template>
+        <style>
+            paper-card {
+                width: 400px;
+                margin-top: 40px;
+                margin-left: 40px;
+                padding-left: 10px;
+                padding-right: 10px;
+                padding-bottom: 10px;
+                z-index: 30px;
+            }
+            
+            paper-card {
+                --paper-card-header: {
+                    background-color: #D4E157;
+                    margin-top: 5px;
+                }
+                --paper-card-header-text: {
+                    color: white;
+                }
+            }
+            
+        </style>
+<!--
+            <template is="dom-if" if="{{!stockItems.length}}">
+                <template id="stockItems" is="dom-repeat" items="[[stockItems]]">
+-->
+                    <paper-card heading="StockItem name here" "{{stockItem.stockItemName}}">
+                        <p class="description">[[stockItem.description]]</p>
+                        <p class="price">Price: [[stockItem.price]]</p>
+                        <p class="dateAvailable">Date available: [[stockItem.dateAvailable]]</p>
+                        <paper-button raised on-tap="_edit">Edit Item</paper-button>
+                    </paper-card>
+<!--
+                </template>
+            </template>
+-->
+    </template>
+    <script>
+        Polymer({
+            is: 'view-stock'
+        , });
+    </script>
+</dom-module>

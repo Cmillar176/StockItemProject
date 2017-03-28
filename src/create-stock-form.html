@@ -5,7 +5,7 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <dom-module id="create-stock-form">
-<!----- This component will be passed into the create-stock.html page ----->
+    <!----- This component will be passed into the create-stock-page.html page ----->
     <template>
         <style>
             paper-card {
@@ -29,9 +29,9 @@
             }
             
             :root {
-/*                --paper-input-container-color: white;*/
+                /*                --paper-input-container-color: white;*/
                 --paper-input-container-focus-color: #29B6F6;
-/*                --paper-input-container-input-color: white;*/
+                /*                --paper-input-container-input-color: white;*/
             }
             
             paper-input {
@@ -50,7 +50,6 @@
                 background-color: #29B6F6;
                 color: white;
                 font-size: 12px;
-                font-weight: bold;
                 height: 40px;
             }
             
@@ -59,18 +58,17 @@
                 padding-bottom: 20px;
             }
             
-            #availableDate {
+            #dateAvailable {
                 width: 180px;
             }
         </style>
-        
         <!----- Create Stock item form ----->
         <paper-card class="stock-item-details" heading="Create a new stock item!">
             <div id="stock-details">
-                <paper-input id="name" label="Item name"></paper-input>
-                <paper-input id="description" label="Description"></paper-input>
-                <vaadin-date-picker id="availableDate" label="Select available date"> </vaadin-date-picker>
-                <paper-input id="price" label="Price" type="number">
+                <paper-input id="stockItemName" label="Item name" value="{{stockItem.stockItemName}}"></paper-input>
+                <paper-input id="description" label="Description" value="{{stockItem.description}}"></paper-input>
+                <vaadin-date-picker id="dateAvailable" label="Select date available" value="{{stockItem.dateAvailable}}"></vaadin-date-picker>
+                <paper-input id="price" label="Price" type="number" value="{{price}}">
                     <div prefix>£</div>
                 </paper-input>
                 <paper-checkbox id="taxable" checked=""> Am I taxable?</paper-checkbox>
@@ -89,32 +87,78 @@
                     type: Object
                     , value: function () {
                         return {
-                            name: ""
+                            stockItemName: ""
                             , description: ""
-                            , price: ""
-                            , availableDate: ""
-                            , taxable: false
+                            , dateAvailable: ""
+                            , price: null
                         }
                     }
                 }
-            }
+//                ,stockItemName: {
+//                    type: String
+//                    , value: ""
+//                }
+//                , description: {
+//                    type: String
+//                    , value: ""
+//                }
+//                , dateAvailable: {
+//                    type: String
+//                    , value: ""
+//                }
+//                , price: {
+//                    type: Number
+//                    , value: null
+//                }
+//                , taxable: {
+//                    type: Boolean
+//                    , value: false
+//                    , observer: 'isTaxable'
+//                }
+//                , editing: {
+//                    type: Boolean
+//                    , value: false
+//                }
+            , }
             // Setting form values to null when form is reset
             
             , reset: function () {
-                    this.$.name.value = null;
+                    this.$.stockItemName.value = null;
                     this.$.description.value = null;
                     this.$.price.value = null;
-                    this.$.availableDate.value = null;
-                    this.$.taxable.value = null;
+                    this.$.dateAvailable.value = null;
+                    this.$.taxable.value = false;
                 }
                 /* Fires create stock item event. 
                    This is handled on the create stock page */
                 
             , create: function () {
+                
+                var stockItem = {
+                    'name' :  this.$.stockItemName.value,
+                    'description' : this.$.description.value,
+                    'price' : this.$.price.value,
+                    'dateAvailable' : this.$.dateAvailable.value,
+                    'taxable' : this.$.taxable.value
+                }; 
+                
+                console.log(stockItem);
+                
                 this.fire('add-stock-item', {
                     // Passing in stock item object
-                    stockItem: this.stockItem
+                    stockItem: stockItem
                 });
+                
+                this.$.stockItemName.value = null;
+                this.$.description.value = null;
+                this.$.price.value = null;
+                this.$.dateAvailable.value = null;
+                this.$.taxable.value = false;                
+                
+                
+            }
+            , edit: function (e) {
+                this.editing = !this.editing;
             }
         });
     </script>

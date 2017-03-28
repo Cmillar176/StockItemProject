@@ -1,0 +1,65 @@
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+
+<dom-module id="temp-page"> 
+   <template>
+           
+       <style>
+            paper-card {
+                width: 400px;
+                margin-top: 40px;
+                margin-left: 40px;
+                padding-left: 10px;
+                padding-right: 10px;
+                padding-bottom: 10px;
+                z-index: 30px;
+            }
+            
+            paper-card {
+                --paper-card-header: {
+                    background-color: #FFB74D;
+                    margin-top: 5px;
+                }
+                --paper-card-header-text: {
+                    color: white;
+                }
+            }
+            
+            paper-button {
+                background-color: #29B6F6;
+                color: white;
+                font-size: 12px;
+                height: 40px;
+            }
+            
+       </style>
+       
+        <iron-localstorage name="stockItems" value="{{stockItems}}" on-iron-localstorage-load-empty="initItems"></iron-localstorage> 
+        <template id="stockItems" is="dom-repeat" items="{{stockItems}}" as="stockItem">
+
+            <paper-card heading="StockItem name here">
+                <p class="description">Description: [[stockItem.description]]</p>
+                <p class="price">Price: [[stockItem.price]]</p>
+                <p class="dateAvailable">Date available: [[stockItem.dateAvailable]]</p>
+                <paper-button raised on-tap="_edit">Edit Item</paper-button>
+            </paper-card>
+
+        </template>
+       
+    </template>
+    <script>
+        Polymer({
+            is: 'temp-page',
+            initItems: function() {
+              this.stockItems = []; 
+            },            
+            properties: {
+                stockItems: {
+                    type: Array
+                }               
+            },            
+        });
+    </script>
+</dom-module>
