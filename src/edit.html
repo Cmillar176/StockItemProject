@@ -1,3 +1,6 @@
+
+<!--temp page-->
+
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
@@ -52,18 +55,17 @@
                 <paper-button raised on-tap="_edit">Edit Item</paper-button>
             </paper-card>
         </template>
-    </template>
-    <script>
-        Polymer({
-            is: 'temp-page'
-            , initItems: function () {
-                this.stockItems = [];
-            }
-            , properties: {
-                stockItems: {
-                    type: Array
+        <script>
+            Polymer({
+                is: 'temp-page'
+                , initItems: function () {
+                    this.stockItems = [];
                 }
-            }
-        });
-    </script>
+                , properties: {
+                    stockItems: {
+                        type: Array
+                    }
+                }
+            , });
+        </script>
 </dom-module>
