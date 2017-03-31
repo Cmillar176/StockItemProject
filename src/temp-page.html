@@ -49,7 +49,8 @@
                     <p class="price">Price: [[stockItem.price]]</p>
                     <p class="dateAvailable">Date available: [[stockItem.dateAvailable]]</p>
                 </div>
-                <paper-button raised on-tap="_edit">Edit Item</paper-button>
+                <paper-button raised on-tap="edit">Edit Item</paper-button>
+                <paper-button stockItem="[[stockItem]]" raised on-tap="delete">Delete</paper-button>
             </paper-card>
         </template>
     </template>
@@ -63,6 +64,10 @@
                 stockItems: {
                     type: Array
                 }
+            }
+            , delete: function (e) {
+                var key = e.currentTarget.stockItem;
+                key.remove();
             }
         });
     </script>

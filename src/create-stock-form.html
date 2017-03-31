@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <dom-module id="create-stock-form">
     <!----- This component will be passed into the create-stock-page.html page ----->
     <template>
@@ -29,9 +30,7 @@
             }
             
             :root {
-                /*                --paper-input-container-color: white;*/
                 --paper-input-container-focus-color: #29B6F6;
-                /*                --paper-input-container-input-color: white;*/
             }
             
             paper-input {
@@ -42,8 +41,25 @@
                 width: 150px;
             }
             
-            vaadin-date-picker {
-                width: 150px;
+            #dataAvailable {
+                width: 200px;
+            }
+            
+            #stock-details {
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            
+            #dateAvailable {
+                width: 200px;
+            }
+            
+            #price {
+                padding-top: 5px;
+            }
+            
+            #needsTaxed {
+                padding-top: 10px;
             }
             
             paper-button {
@@ -53,31 +69,37 @@
                 height: 40px;
             }
             
-            #stock-details {
-                padding-top: 20px;
-                padding-bottom: 20px;
-            }
-            
-            #dateAvailable {
-                width: 180px;
+            #errorDialog {
+                border: 2px solid;
+                border-color: lightcoral;
+                background-color: pink;
+                color: darkred;
             }
         </style>
         <!----- Create Stock item form ----->
-        <paper-card class="stock-item-details" heading="Create a new stock item!">
+        <paper-card id="stockDetails" class="stock-item-details" heading="Create a new stock item!">
             <div id="stock-details">
-                <paper-input id="stockItemName" label="Item name" value="{{stockItem.stockItemName}}"></paper-input>
-                <paper-input id="description" label="Description" value="{{stockItem.description}}"></paper-input>
-                <vaadin-date-picker id="dateAvailable" label="Select date available" value="{{stockItem.dateAvailable}}"></vaadin-date-picker>
-                <paper-input id="price" label="Price" type="number" value="{{price}}">
+                <!----- Adding validation to each input field ----->
+                <paper-input id="stockItemName" label="Item name" required auto-validate error-message="Add a name for your new item!" value="{{stockItem.stockItemName}}"></paper-input>
+                <paper-input id="description" label="Description" required auto-validate error-message="Add a description!" value="{{stockItem.description}}"></paper-input>
+                <vaadin-date-picker id="dateAvailable" label="Select date available" required auto-validate error-message="Select the available date of the item!" value="{{stockItem.dateAvailable}}"></vaadin-date-picker>
+                <paper-input id="price" label="Price" type="number" required auto-validate error-message="Add a price!" value="{{price}}">
                     <div prefix>£</div>
                 </paper-input>
-                <paper-checkbox id="taxable" checked=""> Am I taxable?</paper-checkbox>
+                <paper-checkbox id="needsTaxed" unchecked="">Does tax need applied?</paper-checkbox>
             </div>
             <div id="details-controls">
                 <paper-button raised id="create" on-tap="create">Create</paper-button>
                 <paper-button raised id="reset" on-tap="reset">Reset</paper-button>
             </div>
         </paper-card>
+        <!----- Dialog appears if any fields are left empty ----->
+        <paper-dialog id="errorDialog" opened="{{modalOpened}}">
+            <p>Fields cannot be left empty!</p>
+            <div class="buttons">
+                <!--                <paper-button dialog-confirm autofocus>Cancel</paper-button>-->
+            </div>
+        </paper-dialog>
     </template>
     <script>
         Polymer({
@@ -94,33 +116,9 @@
                         }
                     }
                 }
-//                ,stockItemName: {
-//                    type: String
-//                    , value: ""
-//                }
-//                , description: {
-//                    type: String
-//                    , value: ""
-//                }
-//                , dateAvailable: {
-//                    type: String
-//                    , value: ""
-//                }
-//                , price: {
-//                    type: Number
-//                    , value: null
-//                }
-//                , taxable: {
-//                    type: Boolean
-//                    , value: false
-//                    , observer: 'isTaxable'
-//                }
-//                , editing: {
-//                    type: Boolean
-//                    , value: false
-//                }
+                , modalOpened: Boolean
             , }
-            // Setting form values to null when form is reset
+            // Clearing the form values when the form is reset
             
             , reset: function () {
                     this.$.stockItemName.value = null;
@@ -133,33 +131,25 @@
                    This is handled on the create stock page */
                 
             , create: function () {
-                
+                // Ensure form is not empty!
+                if (this.$.stockItemName.value === "" || this.$.description.value === "" || this.$.dateAvailable.value === "" || this.$.price.value === "") {
+                    this.modalOpened = true
+                    return;
+                }
                 var stockItem = {
-                    'name' :  this.$.stockItemName.value,
-                    'description' : this.$.description.value,
-                    'price' : this.$.price.value,
-                    'dateAvailable' : this.$.dateAvailable.value,
-                    'taxable' : this.$.taxable.value
-                }; 
-                
-                console.log(stockItem);
-                
+                    'name': this.$.stockItemName.value
+                    , 'description': this.$.description.value
+                    , 'price': this.$.price.value
+                    , 'dateAvailable': this.$.dateAvailable.value
+                    , 'taxable': this.$.taxable.value
+                };
+                // Firing up the add stock item event
                 this.fire('add-stock-item', {
                     // Passing in stock item object
                     stockItem: stockItem
                 });
-                
-                this.$.stockItemName.value = null;
-                this.$.description.value = null;
-                this.$.price.value = null;
-                this.$.dateAvailable.value = null;
-                this.$.taxable.value = false;                
-                
                 // Redirecting user to view newly created stock item
                 location.href = "temp-page"
-            }
-            , edit: function (e) {
-                this.editing = !this.editing;
             }
         });
     </script>
