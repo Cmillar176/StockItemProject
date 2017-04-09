@@ -37,6 +37,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 --paper-icon-button-ink-color: white;
             }
             
+            #logo {
+                padding-right: 20px;
+                float: left;
+                height: 40px;
+                width: 40px;
+            }
+            
+            #title {
+                font-size: 26px;
+            }
+            
             .drawer-list {
                 margin: 0 20px;
             }
@@ -50,35 +61,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
             
             .drawer-list a.iron-selected {
-                color: black;
+                color: #FFB74D;
                 font-weight: bold;
             }
         </style>
-        
         <app-location route="{{route}}"></app-location>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
         <app-drawer-layout fullbleed>
             <!-- Drawer content -->
             <app-drawer id="drawer">
                 <app-toolbar>Menu</app-toolbar>
-                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation"> 
-                    <a name="view-stock " href="/view-stock ">View Stock</a> 
-                    <a name="create-stock" href="/create-stock">Create Stock</a> 
-                    <a name="temp-page" href="/temp-page">Temp</a> 
-                </iron-selector>
+                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation"> <a name="create-stock" href="/create-stock">Create Stock</a> <a name="view-stock" href="/view-stock">View Stock</a> </iron-selector>
             </app-drawer>
             <!-- Main content -->
             <app-header-layout has-scrolling-region>
                 <app-header condenses reveals effects="waterfall">
                     <app-toolbar>
                         <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-                        <div main-title>Inventory</div>
+                        <div id="title" main-title>Inventory <img id="logo" src="/images/shopkeepLogo.png"></div>
                     </app-toolbar>
                 </app-header>
-                <iron-pages selected="[[page]]" attr-for-selected="name" role="main">                    
-                    <view-stock name="view-stock "></view-stock >
+                <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
                     <create-stock name="create-stock"></create-stock>
-                    <temp-page name="temp-page"></temp-page>
+                    <view-stock name="view-stock"></view-stock>
                 </iron-pages>
             </app-header-layout>
         </app-drawer-layout>
@@ -87,24 +92,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script>
         Polymer({
             is: 'my-app',
-            properties: {              
+            properties: {
                 page: {
-                    type: String
-                    , reflectToAttribute: true
-                    , observer: '_pageChanged'
-                , }
-            , }
-            , observers: [
-        '_routePageChanged(routeData.page)'
-      , ]
-            , _routePageChanged: function (page) {
-                this.page = page || 'view-stock';
-            }
-            , _pageChanged: function (page) {
+                    type: String,
+                    reflectToAttribute: true,
+                    observer: '_pageChanged',
+                },
+            },
+            observers: [
+        '_routePageChanged(routeData.page)',
+      ],
+            _routePageChanged: function (page) {
+                this.page = page || 'create-stock';
+            },
+            _pageChanged: function (page) {
                 // Load page import on demand. Show 404 page if fails
                 var resolvedPageUrl = this.resolveUrl(page + '.html');
                 this.importHref(resolvedPageUrl, null, this._showPage404, true);
-            }
-        , });
+            },
+        });
     </script>
 </dom-module>

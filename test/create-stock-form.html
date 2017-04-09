@@ -1,0 +1,34 @@
+<link rel="import" href="../bower_components/iron-test-helpers/iron-test-helpers.html" <!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>create-stock</title>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+    <script src="../bower_components/"></script>
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/create-stock-form.html" </head>
+
+    <body>
+        <test-fixture id="create-stock-form">
+            <template>
+                <create-stock-form></create-stock-form>
+            </template>
+        </test-fixture>
+        <script>
+            suite('<create-stock-form>', function () {
+                var myEl;
+                var inputField = document.querySelector('stockItemName');
+                setup(function () {
+                    myEl = fixture('create-stock-form');
+                });
+                test('Input fields are empty when the page loads', function (done) {
+                    Polymer.dom(myEl.root).querySelector('paper-input');
+                });
+            });
+        </script>
+    </body>
+
+</html>

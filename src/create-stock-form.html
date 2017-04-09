@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <dom-module id="create-stock-form">
     <!----- This component will be passed into the create-stock-page.html page ----->
     <template>
@@ -39,6 +40,7 @@
             
             #price {
                 width: 150px;
+                margin-bottom: 10px;
             }
             
             #dataAvailable {
@@ -60,6 +62,15 @@
             
             #needsTaxed {
                 padding-top: 10px;
+            }
+            
+            paper-toggle-button.pink {
+                --paper-toggle-button-checked-bar-color: var(--paper-pink-500);
+                --paper-toggle-button-checked-button-color: var(--paper-pink-500);
+                --paper-toggle-button-checked-ink-color: var(--paper-pink-500);
+                --paper-toggle-button-unchecked-bar-color: var(--paper-indigo-900);
+                --paper-toggle-button-unchecked-button-color: var(--paper-indigo-900);
+                --paper-toggle-button-unchecked-ink-color: var(--paper-indigo-900);
             }
             
             paper-button {
@@ -86,7 +97,7 @@
                 <paper-input id="price" label="Price" type="number" required auto-validate error-message="Add a price!" value="{{price}}">
                     <div prefix>£</div>
                 </paper-input>
-                <paper-checkbox id="needsTaxed" unchecked="">Does tax need applied?</paper-checkbox>
+                <paper-checkbox id="taxable" class="select" checked="{{stockItem.taxable}}" on-change="checkboxChanged">Tax need applied?</paper-checkbox>
             </div>
             <div id="details-controls">
                 <paper-button raised id="create" on-tap="create">Create</paper-button>
@@ -96,9 +107,7 @@
         <!----- Dialog appears if any fields are left empty ----->
         <paper-dialog id="errorDialog" opened="{{modalOpened}}">
             <p>Fields cannot be left empty!</p>
-            <div class="buttons">
-                <!--                <paper-button dialog-confirm autofocus>Cancel</paper-button>-->
-            </div>
+            <div class="buttons"> </div>
         </paper-dialog>
     </template>
     <script>
@@ -109,39 +118,50 @@
                     type: Object
                     , value: function () {
                         return {
-                            stockItemName: ""
-                            , description: ""
-                            , dateAvailable: ""
-                            , price: null
+                            stockItemName: "",
+                             description: "",
+                             dateAvailable: "",
+                             price: null,
+                             taxable: false,
                         }
                     }
                 }
-                , modalOpened: Boolean
-            , }
-            // Clearing the form values when the form is reset
-            
-            , reset: function () {
+            },
+            listeners: {
+                'redirect-to-form': '_redirectToForm',
+                modalOpened: Boolean
+            },
+            checkboxChanged: function (e) {
+                    if (e.target.checked) {
+                        console.log(e.target.value);
+                        this.$.taxable.value = 'yes';
+                        return;
+                    }
+                    this.$.taxable.value = 'no';
+                    return;
+                },
+                // Clearing the form values when the form is reset
+            reset: function () {
                     this.$.stockItemName.value = null;
                     this.$.description.value = null;
                     this.$.price.value = null;
                     this.$.dateAvailable.value = null;
-                    this.$.taxable.value = false;
-                }
+                },
                 /* Fires create stock item event. 
                    This is handled on the create stock page */
                 
-            , create: function () {
+            create: function () {
                 // Ensure form is not empty!
                 if (this.$.stockItemName.value === "" || this.$.description.value === "" || this.$.dateAvailable.value === "" || this.$.price.value === "") {
                     this.modalOpened = true
                     return;
                 }
                 var stockItem = {
-                    'name': this.$.stockItemName.value
-                    , 'description': this.$.description.value
-                    , 'price': this.$.price.value
-                    , 'dateAvailable': this.$.dateAvailable.value
-                    , 'taxable': this.$.taxable.value
+                    'stockItemName': this.$.stockItemName.value,
+                    'description': this.$.description.value,
+                    'price': this.$.price.value,
+                    'dateAvailable': this.$.dateAvailable.value,
+                    'taxable': this.$.taxable.value
                 };
                 // Firing up the add stock item event
                 this.fire('add-stock-item', {
@@ -149,7 +169,10 @@
                     stockItem: stockItem
                 });
                 // Redirecting user to view newly created stock item
-                location.href = "temp-page"
+                location.href = "view-stock"
+            },
+            _redirectToForm: function () {
+                location.href = "create-stock"
             }
         });
     </script>
