@@ -61,7 +61,7 @@
                     <p class="price">Price: [[stockItem.price]]</p>
                     <p class="taxable">Do I need tax applied?: [[stockItem.taxable]]</p>
                 </div>
-                <paper-button stockItem="[[stockItem]]" raised on-tap="openDialog">Delete</paper-button>
+<!--                <paper-button stockItem="[[stockItem]]" raised on-tap="openDialog">Delete</paper-button>-->
             </paper-card>
         </template>
     </template>
@@ -89,20 +89,6 @@
                 if (this.itemToDelete) {
                     //  this.stockItems.splice(index, 1);
                     this.stockItems.pop(this.itemToDelete);
-                    
-                    
-                    
-                var item = e.detail.stockItem;
-                this.stockItems.push(item);
-                var removePos = this.itemToDelete;
-                this.notifySplices('stockItems', [
-                    {
-                        index: removePs
-                        , removed: 1
-                        , object: this.stockItems
-                        , type: 'splice'
-                    }
-                ]);
                 }
                 this.closeDialog();
                 // Refresh page to show item deleted

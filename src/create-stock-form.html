@@ -97,7 +97,7 @@
                 <paper-input id="price" label="Price" type="number" required auto-validate error-message="Add a price!" value="{{price}}">
                     <div prefix>£</div>
                 </paper-input>
-                <paper-checkbox id="taxable" class="select" checked="{{stockItem.taxable}}" on-change="checkboxChanged">Tax need applied?</paper-checkbox>
+                <paper-checkbox id="taxable" class="select" checked="{{stockItem.taxable}}">Tax need applied?</paper-checkbox>
             </div>
             <div id="details-controls">
                 <paper-button raised id="create" on-tap="create">Create</paper-button>
@@ -115,8 +115,8 @@
             is: 'create-stock-form'
             , properties: {
                 stockItem: {
-                    type: Object
-                    , value: function () {
+                    type: Object,
+                    value: function () {
                         return {
                             stockItemName: "",
                              description: "",
@@ -127,35 +127,33 @@
                     }
                 }
             },
+            
             listeners: {
-                'redirect-to-form': '_redirectToForm',
                 modalOpened: Boolean
             },
-            checkboxChanged: function (e) {
-                    if (e.target.checked) {
-                        console.log(e.target.value);
-                        this.$.taxable.value = 'yes';
-                        return;
-                    }
-                    this.$.taxable.value = 'no';
-                    return;
-                },
-                // Clearing the form values when the form is reset
+            
             reset: function () {
                     this.$.stockItemName.value = null;
                     this.$.description.value = null;
                     this.$.price.value = null;
                     this.$.dateAvailable.value = null;
                 },
+            
                 /* Fires create stock item event. 
                    This is handled on the create stock page */
-                
-            create: function () {
+            create: function (e) {
                 // Ensure form is not empty!
                 if (this.$.stockItemName.value === "" || this.$.description.value === "" || this.$.dateAvailable.value === "" || this.$.price.value === "") {
                     this.modalOpened = true
                     return;
                 }
+                if (this.$.taxable.checked) {
+                        this.$.taxable.value = 'Yes';
+                    }
+                else { 
+                    this.$.taxable.value = 'No';
+                     }
+            
                 var stockItem = {
                     'stockItemName': this.$.stockItemName.value,
                     'description': this.$.description.value,
@@ -165,14 +163,10 @@
                 };
                 // Firing up the add stock item event
                 this.fire('add-stock-item', {
-                    // Passing in stock item object
                     stockItem: stockItem
                 });
                 // Redirecting user to view newly created stock item
                 location.href = "view-stock"
-            },
-            _redirectToForm: function () {
-                location.href = "create-stock"
             }
         });
     </script>
